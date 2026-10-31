@@ -87,7 +87,6 @@ const seedData = async () => {
       bio: 'রক্তবার্তা প্রতিষ্ঠাতা ও রক্তদাতা',
       isVerified: true
     });
-    });
 
     // 2. Create 32 Donors across BD & Kolkata
     console.log('[Seed] Creating 32 Donors...');
