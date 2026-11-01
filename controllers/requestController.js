@@ -31,17 +31,23 @@ exports.getRequests = async (req, res) => {
       query.status = 'open';
     }
 
+    const isAll = (term) => {
+      if (!term) return true;
+      const clean = term.trim().toLowerCase();
+      return ['সব', 'সব জেলা', 'সব উপজেলা', 'সকল জেলা', 'সকল উপজেলা', 'সকল', 'all', 'any'].includes(clean);
+    };
+
     // Blood Group filter
-    if (group) {
+    if (group && !isAll(group)) {
       const enGroup = toEnGroup(group);
       query.bloodGroup = enGroup;
     }
 
     // Location filters (supports Bangla, English & Banglish)
-    if (district) {
+    if (district && !isAll(district)) {
       query.district = normalizeDistrict(district);
     }
-    if (upazila) {
+    if (upazila && !isAll(upazila)) {
       query.upazila = normalizeUpazila(upazila);
     }
 

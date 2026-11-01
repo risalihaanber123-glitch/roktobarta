@@ -293,8 +293,13 @@ function autoBindLocations() {
         },
         (pickedItem) => {
           if (uInput) {
-            uInput.value = '';
-            uInput.focus();
+            const pickedName = typeof pickedItem === 'object' ? (pickedItem.n || '') : pickedItem;
+            if (pickedName === 'সব জেলা' || pickedName === 'সব') {
+              uInput.value = 'সব উপজেলা';
+            } else {
+              uInput.value = '';
+              uInput.focus();
+            }
           }
         }
       );

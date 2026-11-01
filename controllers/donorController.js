@@ -19,8 +19,15 @@ exports.getDonors = async (req, res) => {
       isBanned: false
     };
 
+    // Helper to check if a location term means "ALL" (সব)
+    const isAll = (term) => {
+      if (!term) return true;
+      const clean = term.trim().toLowerCase();
+      return ['সব', 'সব জেলা', 'সব উপজেলা', 'সকল জেলা', 'সকল উপজেলা', 'সকল', 'all', 'any'].includes(clean);
+    };
+
     // Blood Group & Compatibility Filtering
-    if (group && group.trim()) {
+    if (group && group.trim() && !isAll(group)) {
       const enGroup = toEnGroup(group.trim());
       if (compatible === 'on' || compatible === 'true') {
         const compGroups = getCompatibleDonors(enGroup);
@@ -31,11 +38,11 @@ exports.getDonors = async (req, res) => {
     }
 
     // Location Filtering (supports Bangla, English & Banglish)
-    if (district && district.trim()) {
+    if (district && district.trim() && !isAll(district)) {
       const normDist = normalizeDistrict(district.trim());
       query.district = new RegExp('^' + normDist + '$', 'i');
     }
-    if (upazila && upazila.trim()) {
+    if (upazila && upazila.trim() && !isAll(upazila)) {
       const upTerm = upazila.trim();
       const normUp = normalizeUpazila(upTerm);
       query.$or = [
@@ -70,7 +77,7 @@ exports.getDonors = async (req, res) => {
       totalPages,
       totalCount,
       filters: {
-        group: group ? toEnGroup(group) : '',
+        group: group && !isAll(group) ? toEnGroup(group) : '',
         district: district || '',
         upazila: upazila || '',
         available: available || 'all',
