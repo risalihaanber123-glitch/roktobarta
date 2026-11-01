@@ -1,5 +1,6 @@
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+const { getMongoUri } = require('./db');
 
 const createSessionConfig = () => {
   const isProduction = process.env.NODE_ENV === 'production';
@@ -10,7 +11,7 @@ const createSessionConfig = () => {
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/roktobarta',
+      mongoUrl: getMongoUri(),
       collectionName: 'sessions',
       ttl: 14 * 24 * 60 * 60, // 14 days
       autoRemove: 'native'
