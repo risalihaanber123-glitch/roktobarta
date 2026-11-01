@@ -2,6 +2,7 @@ require('dotenv').config();
 const http = require('http');
 const app = require('./app');
 const connectDB = require('./config/db');
+const startKeepAlive = require('./utils/keepAlive');
 
 // Handle Uncaught Exceptions
 process.on('uncaughtException', (err) => {
@@ -19,6 +20,9 @@ const startServer = async () => {
   server.listen(PORT, () => {
     console.log(`[Roktobarta Server] Running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
     console.log(`[URL] ${process.env.SITE_URL || `http://localhost:${PORT}`}`);
+
+    // Start 9-minute keep-alive ping for Render
+    startKeepAlive();
   });
 
   // Handle Unhandled Rejections

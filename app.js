@@ -105,6 +105,11 @@ app.use(setLocals);
 const { csrfProtection: globalCsrfToken } = require('./middleware/security');
 app.use((req, res, next) => (req.method === 'GET' ? globalCsrfToken(req, res, next) : next()));
 
+// Keep-alive / Health-check endpoint (for Render & monitoring)
+app.get('/ping', (req, res) => {
+  res.status(200).json({ status: 'ok', uptime: Math.floor(process.uptime()), timestamp: Date.now() });
+});
+
 // API Routes
 app.use('/api', require('./routes/api'));
 
