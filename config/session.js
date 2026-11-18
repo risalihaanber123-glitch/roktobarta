@@ -1,28 +1,20 @@
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
-const { getMongoUri } = require('./db');
-
+﻿const session = require("express-session");
+const MongoStore = require("connect-mongo");
+const mongoose = require("mongoose");
 const createSessionConfig = () => {
-  const isProduction = process.env.NODE_ENV === 'production';
-
+  const isProduction = process.env.NODE_ENV === "production";
   return session({
-    name: 'roktobarta_sid',
-    secret: process.env.SESSION_SECRET || 'roktobarta_default_fallback_session_secret_2026',
+    name: "roktobarta_sid",
+    secret: process.env.SESSION_SECRET || "roktobarta_default_fallback_session_secret_2026",
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: getMongoUri(),
-      collectionName: 'sessions',
-      ttl: 14 * 24 * 60 * 60, // 14 days
-      autoRemove: 'native'
+      clientPromise: mongoose.connection.asPromise().then(conn => conn.getClient()),
+      collectionName: "sessions",
+      ttl: 14 * 24 * 60 * 60,
+      autoRemove: "native"
     }),
-    cookie: {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: 'lax',
-      maxAge: 14 * 24 * 60 * 60 * 1000 // 14 days
-    }
+    cookie: { httpOnly: true, secure: isProduction, sameSite: "lax", maxAge: 14 * 24 * 60 * 60 * 1000 }
   });
 };
-
 module.exports = createSessionConfig;
