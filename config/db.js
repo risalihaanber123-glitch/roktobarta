@@ -7,7 +7,7 @@ const getMongoUri = () => {
     const queryPart = uri.includes('?') ? '?' + uri.split('?')[1] : '?retryWrites=true&w=majority';
     if (basePart.endsWith('.net') || basePart.endsWith('.net/')) {
       const cleanBase = basePart.replace(/\/+$/, '');
-      uri = ${cleanBase}/roktobarta;
+      uri = cleanBase + '/roktobarta' + queryPart;
     }
   }
   return uri;
