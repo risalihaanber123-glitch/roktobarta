@@ -3,16 +3,17 @@ const mongoose = require('mongoose');
 const connectDB = require('../config/db');
 
 let app;
+let dbReady = false;
 
 module.exports = async (req, res) => {
-  try {
-    if (mongoose.connection.readyState === 0) {
+  if (!dbReady || mongoose.connection.readyState !== 1) {
+    try {
       await connectDB();
+      dbReady = true;
+    } catch (err) {
+      console.error('DB connect failed:', err.message);
+      return res.status(503).send('Database unavailable.');
     }
-    await mongoose.connection.asPromise();
-  } catch (err) {
-    console.error('DB connection failed:', err.message);
-    return res.status(503).send('Database unavailable.');
   }
   if (!app) {
     app = require('../app');

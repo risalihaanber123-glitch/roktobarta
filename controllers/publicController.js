@@ -13,8 +13,8 @@ const { sendMail } = require('../config/mail');
  */
 exports.getHome = async (req, res) => {
   try {
-    // Auto-expire past requests
-    await BloodRequest.expireOldRequests();
+    // Auto-expire past requests (non-fatal)
+    try { await BloodRequest.expireOldRequests(); } catch (expireErr) { console.error('[expire skip]', expireErr.message); }
 
     const twentyFourHoursAgo = new Date(Date.now() - 24 * 3600 * 1000);
 
