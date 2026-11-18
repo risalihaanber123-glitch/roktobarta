@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+﻿const mongoose = require('mongoose');
 
 const getMongoUri = () => {
   let uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/roktobarta';
@@ -22,7 +22,7 @@ const connectDB = async () => {
     console.log(`[MongoDB] Connected: ${conn.connection.host}/${conn.connection.name}`);
   } catch (error) {
     console.error(`[MongoDB Error] ${error.message}`);
-    process.exit(1);
+    throw error;
   }
 };
 
