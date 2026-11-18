@@ -1,13 +1,21 @@
-﻿require("dotenv").config();
-const mongoose = require("mongoose");
-const connectDB = require("../config/db");
+require('dotenv').config();
+const mongoose = require('mongoose');
+const connectDB = require('../config/db');
+
 let app;
-let ready = false;
+
 module.exports = async (req, res) => {
-  if (!ready || mongoose.connection.readyState !== 1) {
-    try { await connectDB(); ready = true; }
-    catch (err) { res.status(503).send("Database unavailable."); return; }
+  try {
+    if (mongoose.connection.readyState === 0) {
+      await connectDB();
+    }
+    await mongoose.connection.asPromise();
+  } catch (err) {
+    console.error('DB connection failed:', err.message);
+    return res.status(503).send('Database unavailable.');
   }
-  if (!app) { app = require("../app"); }
+  if (!app) {
+    app = require('../app');
+  }
   return app(req, res);
 };
