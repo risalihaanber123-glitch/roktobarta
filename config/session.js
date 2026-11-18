@@ -1,4 +1,4 @@
-﻿const session = require("express-session");
+const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const mongoose = require("mongoose");
 const createSessionConfig = () => {
@@ -9,7 +9,7 @@ const createSessionConfig = () => {
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      clientPromise: mongoose.connection.asPromise().then(conn => conn.getClient()),
+      clientPromise: mongoose.connection.asPromise().then(conn => conn.client),
       collectionName: "sessions",
       ttl: 14 * 24 * 60 * 60,
       autoRemove: "native"
